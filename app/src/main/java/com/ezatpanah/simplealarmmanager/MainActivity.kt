@@ -16,6 +16,7 @@ import android.widget.TimePicker
 import com.ezatpanah.simplealarmmanager.databinding.ActivityMainBinding
 import java.util.*
 
+//https://www.youtube.com/watch?v=xSrVWFCtgaE
 
 class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
