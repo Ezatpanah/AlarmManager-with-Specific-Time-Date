@@ -34,7 +34,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val notification: Notification = builder
             .setContentTitle("Your Title Notification Here")
-            .setContentText("Your Text Notification Here\nClick on Notification to going to specific Activity ")
+            .setContentText("Your Text Notification Here.Tap on the notification")
             .setTicker("New Message Alert!")
             .setSmallIcon(R.drawable.ic_lock_idle_alarm)
             .setContentIntent(pendingIntent).build()
