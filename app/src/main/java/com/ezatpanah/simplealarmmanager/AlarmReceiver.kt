@@ -16,7 +16,7 @@ import androidx.core.app.TaskStackBuilder
 
 class AlarmReceiver : BroadcastReceiver() {
 
-    private val CHANNEL_ID = "com.singhajit.notificationDemo.channelId"
+    private val CHANNEL_ID = "com.ezatpanah.simplealarmmanager"
 
     override fun onReceive(context: Context?, p1: Intent?) {
 
@@ -34,7 +34,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val notification: Notification = builder
             .setContentTitle("Your Title Notification Here")
-            .setContentText("Your Text Notification Here")
+            .setContentText("Your Text Notification Here\nClick on Notification to going to specific Activity ")
             .setTicker("New Message Alert!")
             .setSmallIcon(R.drawable.ic_lock_idle_alarm)
             .setContentIntent(pendingIntent).build()
