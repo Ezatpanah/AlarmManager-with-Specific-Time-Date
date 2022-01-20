@@ -10,9 +10,8 @@
         android:id="@+id/tvShowDateTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="hello_world"
-        app:layout_constraintBottom_toBottomOf="@id/btnSetAlarm"
+        android:text="Time/Date Set for Alarm"
+        app:layout_constraintBottom_toTopOf="@+id/btnSetAlarm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,13 +21,13 @@
         android:id="@+id/btnSetAlarm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:padding="10dp"
-        android:text="Set Alarm\n\nShow Selected Time"
+        android:text="set alarm"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvShowDateTime" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

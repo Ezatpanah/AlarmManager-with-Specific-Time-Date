@@ -1,40 +1,30 @@
 package com.ezatpanah.simplealarmmanager
 
 import android.annotation.SuppressLint
+import android.app.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.app.AlarmManager
-import android.app.DatePickerDialog
+import android.app.DatePickerDialog.OnDateSetListener
 
-import android.app.PendingIntent
-import android.app.TimePickerDialog
+import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Context
 
 import android.content.Intent
+import android.text.format.DateFormat
+import android.util.Log
+import android.view.View
 import android.widget.DatePicker
 import android.widget.TimePicker
+import androidx.fragment.app.DialogFragment
 import com.ezatpanah.simplealarmmanager.databinding.ActivityMainBinding
 import java.util.*
+import android.widget.Toast
+import kotlin.concurrent.fixedRateTimer
 
-//https://www.youtube.com/watch?v=xSrVWFCtgaE
 
-class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+class MainActivity : AppCompatActivity(), OnTimeSetListener, OnDateSetListener {
 
     private lateinit var binding: ActivityMainBinding
-
-    var day = 0
-    var month = 0
-    var year = 0
-    var hour = 0
-    var minute = 0
-
-    var savedDay = 0
-    var savedMonth = 0
-    var savedYear = 0
-    var savedHour = 0
-    var savedMinute = 0
-
-    private lateinit var cal: Calendar
 
     @SuppressLint("UnspecifiedImmutableFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,58 +34,60 @@ class MainActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, Ti
 
         pickDate()
 
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val notificationIntent = Intent(this, AlarmReceiver::class.java)
-        val broadcast = PendingIntent.getBroadcast(this, 100, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-        cal = Calendar.getInstance()
-        cal[Calendar.HOUR_OF_DAY] = savedHour
-        cal[Calendar.MINUTE] = savedMinute
-        //cal.add(Calendar.SECOND, 5)
-        //alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast)
-        //alarmManager.setExact(AlarmManager.RTC_WAKEUP, , broadcast)
-
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.timeInMillis, AlarmManager.INTERVAL_DAY, broadcast)
     }
 
-
-    private fun getDateTimeCalender() {
-        val cal: Calendar = Calendar.getInstance()
-        day = cal.get(Calendar.DAY_OF_MONTH)
-        month = cal.get(Calendar.MONTH)
-        year = cal.get(Calendar.YEAR)
-        hour = cal.get(Calendar.HOUR)
-        minute = cal.get(Calendar.MINUTE)
+    fun setAlarm() {
+        val calNow = Calendar.getInstance()
+        val calSet = calNow.clone() as Calendar
+        calSet[Calendar.HOUR_OF_DAY] = alarmHour
+        calSet[Calendar.MINUTE] = alarmMin
+        calSet[Calendar.DAY_OF_MONTH] = alarmDay
+        calSet[Calendar.YEAR] = alarmYear
+        calSet[Calendar.MONTH] = alarmMonth
+        setAlarmN(calSet)
     }
+
+    @SuppressLint("SetTextI18n")
+    private fun setAlarmN(targetCal: Calendar) {
+        binding.tvShowDateTime.text="Alarm is set at" + targetCal.time
+        Toast.makeText(this, "Alarm is set at" + targetCal.time,
+            Toast.LENGTH_LONG).show()
+        val intent = Intent(baseContext, AlarmReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            baseContext, 1, intent, 0)
+        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        alarmManager[AlarmManager.RTC_WAKEUP, targetCal.timeInMillis] = pendingIntent
+    }
+
 
     private fun pickDate() {
         binding.btnSetAlarm.setOnClickListener {
-            getDateTimeCalender()
+            val c = Calendar.getInstance()
+            val year = c[Calendar.YEAR]
+            val month = c[Calendar.MONTH]
+            val day = c[Calendar.DAY_OF_MONTH]
             DatePickerDialog(this, this, year, month, day).show()
         }
-
-
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        savedDay = dayOfMonth
-        savedMonth = month + 1
-        savedYear = year
+        alarmDay = dayOfMonth
+        alarmMonth = month
+        alarmYear = year
 
-        getDateTimeCalender()
+        val c = Calendar.getInstance()
+        val hour = c[Calendar.HOUR_OF_DAY]
+        val minute = c[Calendar.MINUTE]
         TimePickerDialog(this, this, hour, minute, true).show()
-
 
     }
 
     @SuppressLint("SetTextI18n")
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        savedHour = hourOfDay
-        savedMinute = minute
+        alarmHour = hourOfDay
+        alarmMin = minute
 
-        binding.tvShowDateTime.text = "$savedDay - $savedMonth - $savedYear \nHour/Minute:$savedHour:$savedMinute"
-
+        setAlarm()
     }
-
 
 }

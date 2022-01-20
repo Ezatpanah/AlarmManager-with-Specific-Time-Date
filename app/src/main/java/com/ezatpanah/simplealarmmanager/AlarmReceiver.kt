@@ -10,15 +10,18 @@ import android.app.Notification
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.app.PendingIntent
+import android.widget.Toast
 import androidx.core.app.TaskStackBuilder
 
 
-
-class AlarmReceiver: BroadcastReceiver() {
+class AlarmReceiver : BroadcastReceiver() {
 
     private val CHANNEL_ID = "com.singhajit.notificationDemo.channelId"
 
     override fun onReceive(context: Context?, p1: Intent?) {
+
+
+
         val notificationIntent = Intent(context, NotificationActivity::class.java)
 
         val stackBuilder: TaskStackBuilder? = context?.let { TaskStackBuilder.create(it) }
@@ -29,17 +32,18 @@ class AlarmReceiver: BroadcastReceiver() {
 
         val builder: Notification.Builder = Notification.Builder(context)
 
-        val notification: Notification = builder.setContentTitle("Demo App Notification")
-            .setContentText("New Notification From Demo App..")
+        val notification: Notification = builder
+            .setContentTitle("Your Title Notification Here")
+            .setContentText("Your Text Notification Here")
             .setTicker("New Message Alert!")
-            .setSmallIcon(R.mipmap.sym_def_app_icon)
+            .setSmallIcon(R.drawable.ic_lock_idle_alarm)
             .setContentIntent(pendingIntent).build()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder.setChannelId(CHANNEL_ID)
         }
 
-        val notificationManager : NotificationManager = (context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+        val notificationManager: NotificationManager = (context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -50,5 +54,6 @@ class AlarmReceiver: BroadcastReceiver() {
             notificationManager.createNotificationChannel(channel);
         }
 
-        notificationManager.notify(0, notification)    }
+        notificationManager.notify(0, notification)
+    }
 }
